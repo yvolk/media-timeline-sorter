@@ -34,15 +34,6 @@ public class MediaFile implements Comparable<MediaFile> {
     final long fileTimeInitial;
     private long fileTime = 0;
 
-    @Override
-    public String toString() {
-        return "MediaFile{" +
-                name +
-                ", " + (fileTime == 0 ? " - " : new Date(fileTime)) +
-                ( timeChanged() ? ", " + ( fileTime - fileTimeInitial ) + "ms" : "") +
-                '}';
-    }
-
     public MediaFile(@NotNull Path path) {
         this.path = path;
         fileName = path.getFileName().toString();
@@ -176,6 +167,24 @@ public class MediaFile implements Comparable<MediaFile> {
     }
 
     public boolean hasFirmTime() {
-        return firmTimeExtensions.contains(name.extension);
+        return firmTimeExtensions.contains(name.extension.toLowerCase());
+    }
+
+    public MediaFile getSameFile(List<MediaFile> files) {
+        for (MediaFile file : files) {
+            if (name.getPermanentNamePart().equals(file.name.getPermanentNamePart())) {
+                return file;
+            }
+        }
+        return new MediaFile(files.get(0).path.resolveSibling("notFound.txt"));
+    }
+
+    @Override
+    public String toString() {
+        return "MediaFile{" +
+                name + ", " +
+                (fileTime == 0 ? " - " : new Date(fileTime)) +
+                ( timeChanged() ? ", " + ( fileTime - fileTimeInitial ) + "ms" : "") +
+                '}';
     }
 }
