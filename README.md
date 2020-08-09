@@ -31,7 +31,7 @@ file modification dates.
 yv001-DSC-9031.jpg  
 yv002-DSC-9035.jpg  
 yv003-MOV-5588.mts  
-yv004-MOV-9036.jpg  
+yv004-DSC-9036.jpg  
 ...
    
 2. Set file date of each image file to its EXIF's Date Taken. I usually use GeoSetter
@@ -50,7 +50,7 @@ creating a joined sequence, e.g.:
 0003-es002-IMG_20200731_171604.jpg  
 0004-yv002-DSC-9035.jpg  
 0005-yv003-MOV-5588.mts  
-0006-yv004-MOV-9036.jpg  
+0006-yv004-DSC-9036.jpg  
 ...
 
 In a case files weren't renamed, see its output with errors (these are usually 
