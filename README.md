@@ -41,7 +41,8 @@ created on some device have incorrect Date/Time
 
 3. Copy all bunches to the same folder. 
 
-4. Launch  media-timeline-sorter tool in this folder. So it prepends each file name with a sequence number, 
+## Usage
+1. Launch  media-timeline-sorter tool in a folder with all file copied. So it prepends each file name with a sequence number, 
 creating a joined sequence, e.g.:
 
 0001-es001-IMG_20200731_171525.jpg  
@@ -60,3 +61,5 @@ Command line example:
 java -cp c:\java\app\MediaTimelineSorter\target\media-timeline-sorter-1.0.2.jar com.yurivolkov.mediatimelinesorter.Main 1>c:\Users\yuri\Downloads\temp\mediatimeline-005.txt 2>&1
 
 \- here I redirect output to a file, so it's easy to inspect results and figure out problems.
+
+Relaunch the tool after any correction, no manual renaming is needed. 
