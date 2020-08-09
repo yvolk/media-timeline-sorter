@@ -3,6 +3,7 @@ package com.yurivolkov.mediatimelinesorter;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 /*
  * Copyright (c) 2017 yvolk (Yuri Volkov), http://yurivolkov.com
  *
@@ -43,4 +44,14 @@ public class ParsedNameTest {
         assertEquals(extension, parsedName.extension);
     }
 
+    @Test
+    public void parseTime() throws Exception {
+        assertOneTime("yv015-VID_20200718_210725.mp4");
+        assertOneTime("125-yv015-VID_20200718_210725.mp4");
+    }
+
+    private void assertOneTime(String name) {
+        ParsedName parsedName = ParsedName.parse(name);
+        assertTrue(parsedName.toString(), parsedName.parseTimeFromName() > 0);
+    }
 }

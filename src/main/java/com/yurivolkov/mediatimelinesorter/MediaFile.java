@@ -187,4 +187,11 @@ public class MediaFile implements Comparable<MediaFile> {
                 ( timeChanged() ? ", " + ( fileTime - fileTimeInitial ) + "ms" : "") +
                 '}';
     }
+
+    public void tryToSetTimeFromName() {
+        long time = name.parseTimeFromName();
+        if (time > 0) {
+            setFileTime(time);
+        }
+    }
 }

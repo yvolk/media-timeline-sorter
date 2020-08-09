@@ -82,7 +82,9 @@ public class Sorter {
                     ind > 0 && files.get(ind - 1).getFileTime() > file.getFileTime() ||
                     indFirmNext > 0 && files.get(indFirmNext).getFileTime() < file.getFileTime()
                 ) {
-                ind = fixFilesTillNextFirm(indFirmPrev, indFirmNext, files);
+                ind = fixFileTimesTillNextFirm(indFirmPrev, indFirmNext, files);
+            } else {
+                file.tryToSetTimeFromName();
             }
             ind++;
         }
@@ -100,7 +102,7 @@ public class Sorter {
         return -1;
     }
 
-    private int fixFilesTillNextFirm(int indFirmPrev, int indFirmNext, List<MediaFile> files) {
+        private int fixFileTimesTillNextFirm(int indFirmPrev, int indFirmNext, List<MediaFile> files) {
         long timeFrom = indFirmPrev < 0 ? 0 : files.get(indFirmPrev).getFileTime();
         long timeTo = indFirmNext < 0 ? 0 : files.get(indFirmNext).getFileTime() - 1000 * (indFirmNext - indFirmPrev);
         if (timeTo < 0) {
