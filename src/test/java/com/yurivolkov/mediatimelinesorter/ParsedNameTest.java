@@ -31,6 +31,8 @@ public class ParsedNameTest {
                 true, "yp", 38, "jpg");
         assertOneName("1-yp38.mp4", 1, "yp38.mp4",
                 true, "yp", 38, "mp4");
+        assertOneName("zagv036-вода-бурлит.mov", 0, "zagv036-вода-бурлит.mov",
+                true, "zagv", 36, "mov");
     }
 
     private void assertOneName(String name, int globalOrder, String permanentNamePart,
@@ -46,12 +48,17 @@ public class ParsedNameTest {
 
     @Test
     public void parseTime() throws Exception {
-        assertOneTime("yv015-VID_20200718_210725.mp4");
-        assertOneTime("125-yv015-VID_20200718_210725.mp4");
+        long parsedTime = 1595095645000L;
+        assertOneTime("yv015-VID_20200718_210725.mp4", parsedTime);
+        assertOneTime("yv015-20200718_210725.mp4", parsedTime);
+        assertOneTime("yv015-20200718_210725-super.mp4", parsedTime);
+        assertOneTime("125-yv015-VID_20200718_210725.mp4", parsedTime);
+        assertOneTime("003-yv015-VID_20200718_210725-best-clip.mp4", parsedTime);
+        assertOneTime("zagv036-вода-бурлит.mov", 0);
     }
 
-    private void assertOneTime(String name) {
+    private void assertOneTime(String name, long parsedTime) {
         ParsedName parsedName = ParsedName.parse(name);
-        assertTrue(parsedName.toString(), parsedName.parseTimeFromName() > 0);
+        assertEquals(parsedName.toString(), parsedTime, parsedName.parsedTime);
     }
 }

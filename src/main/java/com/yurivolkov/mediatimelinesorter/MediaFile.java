@@ -166,8 +166,14 @@ public class MediaFile implements Comparable<MediaFile> {
         return path.resolveSibling(fileName);
     }
 
+    public long getBestTime() {
+        return hasFirmTime() && name.parsedTime > 0
+            ? name.parsedTime
+            : getFileTime();
+    }
+
     public boolean hasFirmTime() {
-        return firmTimeExtensions.contains(name.extension.toLowerCase());
+        return name.parsedTime > 0 || firmTimeExtensions.contains(name.extension.toLowerCase());
     }
 
     public MediaFile getSameFile(List<MediaFile> files) {
@@ -189,9 +195,8 @@ public class MediaFile implements Comparable<MediaFile> {
     }
 
     public void tryToSetTimeFromName() {
-        long time = name.parseTimeFromName();
-        if (time > 0) {
-            setFileTime(time);
+        if (name.parsedTime > 0) {
+            setFileTime(name.parsedTime);
         }
     }
 }

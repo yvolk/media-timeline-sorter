@@ -47,12 +47,12 @@ public class Sorter {
             }
         }
         for (String key : timelineKeys) {
-            fixTimeForOneTimeline(getSortedTimelineByKey(files, key));
+            fixTimeForOneTimeline(getSourceOrderedTimelineByKey(files, key));
         }
     }
 
     @NotNull
-    private List<MediaFile> getSortedTimelineByKey(List<MediaFile> files, String key) {
+    private List<MediaFile> getSourceOrderedTimelineByKey(List<MediaFile> files, String key) {
         List<MediaFile> timelineFiles = new ArrayList<>();
         for (MediaFile file : files) {
             if (key.equals(file.name.sourceKey)) {
@@ -73,18 +73,17 @@ public class Sorter {
             }
             MediaFile file = files.get(ind);
             if (file.hasFirmTime()) {
-                if (indFirmPrev >= 0 && files.get(indFirmPrev).getFileTime() > file.getFileTime()) {
+                if (indFirmPrev >= 0 && files.get(indFirmPrev).getBestTime() > file.getBestTime()) {
                     throw new IllegalStateException("file " + files.get(indFirmPrev) +
                             " is older than " + file );
                 }
+                file.tryToSetTimeFromName();
                 indFirmPrev = ind;
             } else if (
-                    ind > 0 && files.get(ind - 1).getFileTime() > file.getFileTime() ||
-                    indFirmNext > 0 && files.get(indFirmNext).getFileTime() < file.getFileTime()
+                    ind > 0 && files.get(ind - 1).getBestTime() > file.getBestTime() ||
+                    indFirmNext > 0 && files.get(indFirmNext).getBestTime() < file.getBestTime()
                 ) {
                 ind = fixFileTimesTillNextFirm(indFirmPrev, indFirmNext, files);
-            } else {
-                file.tryToSetTimeFromName();
             }
             ind++;
         }
@@ -104,25 +103,25 @@ public class Sorter {
 
         private int fixFileTimesTillNextFirm(int indFirmPrev, int indFirmNext, List<MediaFile> files) {
         long timeFrom = indFirmPrev < 0 ? 0 : files.get(indFirmPrev).getFileTime();
-        long timeTo = indFirmNext < 0 ? 0 : files.get(indFirmNext).getFileTime() - 1000 * (indFirmNext - indFirmPrev);
+        long timeTo = indFirmNext < 0 ? 0 : files.get(indFirmNext).getBestTime() - 1000 * (indFirmNext - indFirmPrev);
         if (timeTo < 0) {
             timeTo = 0;
         }
-        if (timeFrom > 0 && timeTo > 0 && timeTo < timeFrom ) {
-            timeTo = timeFrom + files.get(indFirmNext).getFileTime();
+        if (timeTo > 0 && timeTo < timeFrom ) {
+            timeTo = timeFrom + files.get(indFirmNext).getBestTime();
         }
         long timeShiftForward = -1;
         if (indFirmPrev >= 0 && indFirmPrev < (files.size() - 1)) {
-            timeShiftForward = files.get(indFirmPrev).getFileTime() - files.get(indFirmPrev + 1).getFileTime() + 1000;
+            timeShiftForward = files.get(indFirmPrev).getBestTime() - files.get(indFirmPrev + 1).getBestTime() + 1000;
         }
         long timeShiftBack = -1;
         if (indFirmNext > 0) {
-            timeShiftBack = files.get(indFirmNext - 1).getFileTime() + 1000 - files.get(indFirmNext).getFileTime();
+            timeShiftBack = files.get(indFirmNext - 1).getBestTime() + 1000 - files.get(indFirmNext).getBestTime();
         }
         if (timeShiftForward > 0) {
             long fileTimePrev = timeFrom;
             for (int ind2 = indFirmPrev + 1; ind2 < (indFirmNext >= 0 ? indFirmNext : files.size()); ind2++) {
-                long fileTime = files.get(ind2).getFileTime() + timeShiftForward;
+                long fileTime = files.get(ind2).getBestTime() + timeShiftForward;
                 if (fileTime <= fileTimePrev) {
                     fileTime = fileTimePrev + 1000;
                 }
@@ -140,7 +139,7 @@ public class Sorter {
         } else if (timeShiftBack > 0) {
             long fileTimePrev = timeFrom;
             for (int ind2 = indFirmPrev + 1; ind2 < (indFirmNext >= 0 ? indFirmNext : files.size()); ind2++) {
-                long fileTime = files.get(ind2).getFileTime() - timeShiftBack;
+                long fileTime = files.get(ind2).getBestTime() - timeShiftBack;
                 if (fileTime <= fileTimePrev) {
                     fileTime = fileTimePrev + 1000;
                 }

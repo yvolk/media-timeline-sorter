@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ParsedName {
     @NotNull
@@ -30,6 +31,8 @@ public class ParsedName {
     public final long sourceOrder;
     @NotNull
     public final String extension;
+    /** 0 if failed to parse */
+    public final long parsedTime;
 
     private ParsedName(@NotNull String name) {
         this.name = name;
@@ -38,6 +41,7 @@ public class ParsedName {
         sourceKey = calcSourceTimelineKey();
         sourceOrder = calcSourceTimelineOrder();
         extension = calcExtension();
+        parsedTime = parseTimeFromName();
     }
 
     public static ParsedName parse(@NotNull String name) {
@@ -122,7 +126,7 @@ public class ParsedName {
     }
 
     static boolean isDigit(String name, int ind) {
-        if (name == null || name.length() <= ind) {
+        if (name == null || name.length() <= ind || ind < 0) {
             return false;
         }
         return "0123456789".contains(name.substring(ind, ind + 1));
@@ -138,11 +142,11 @@ public class ParsedName {
     /**
      * @return 0 if failed to parse
      */
-    public long parseTimeFromName() {
+    private long parseTimeFromName() {
         // e.g. from VID_20200718_210725.mp4
         String name = dropExtension(getNameAfterSourceTimelineOrder());
         int ind = -1;
-        while (!isDigit(name, ind + 1)) {
+        while (!isDigit(name, ind + 1) && ind < name.length()) {
             ind++;
         }
         if (!isDigit(name, ind+1)) return 0;
@@ -180,6 +184,7 @@ public class ParsedName {
                 ", indPermanentFileNamePart=" + indPermanentFileNamePart +
                 ", sourceKey='" + sourceKey + '\'' +
                 ", sourceOrder=" + sourceOrder +
+                (parsedTime == 0 ? "" : ", " + new Date(parsedTime)) +
                 '}';
     }
 }
