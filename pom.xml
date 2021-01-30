@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.yurivolkov.app</groupId>
     <artifactId>media-timeline-sorter</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 
     <build>
         <plugins>
@@ -61,7 +61,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
