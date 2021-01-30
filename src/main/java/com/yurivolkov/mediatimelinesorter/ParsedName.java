@@ -158,7 +158,14 @@ public class ParsedName {
         if (toParse.contains(".")) {
             toParse = toParse.substring(0, toParse.indexOf("."));
         }
-        String pattern = toParse.length() == 18 ? "yyyyMMdd_HHmmssSSS" : "yyyyMMdd_HHmmss";
+        String pattern;
+        if (toParse.length() == 18) {
+            // Milliseconds in a file name are in UTC, not in current time zone ?!
+            toParse = toParse + "+00";
+            pattern = "yyyyMMdd_HHmmssSSSX";
+        } else {
+            pattern = "yyyyMMdd_HHmmss";
+        }
         SimpleDateFormat format = new SimpleDateFormat(pattern);
         try {
             return format.parse(toParse).getTime();

@@ -2,6 +2,8 @@ package com.yurivolkov.mediatimelinesorter;
 
 import org.junit.Test;
 
+import java.util.TimeZone;
+
 import static org.junit.Assert.assertEquals;
 /*
  * Copyright (c) 2017 yvolk (Yuri Volkov), http://yurivolkov.com
@@ -56,8 +58,12 @@ public class ParsedNameTest {
         assertOneTime("zagv036-вода-бурлит.mov", 0);
 
         assertOneTime("yp003-20200718_210725-10.jpg", parsedTime);
-        assertOneTime("yp003-20200718_210725910.jpg", parsedTime + 910);
-        assertOneTime("yp003-20200718_210725910.MP.jpg", parsedTime + 910);
+
+        // Time with milliseconds is in UTC ?!
+        long expectedTime = parsedTime + TimeZone.getDefault().getRawOffset();
+
+        assertOneTime("yp003-20200718_210725910.jpg", expectedTime + 910);
+        assertOneTime("yp003-20200718_210725910.MP.jpg", expectedTime + 910);
     }
 
     private void assertOneTime(String name, long parsedTime) {
