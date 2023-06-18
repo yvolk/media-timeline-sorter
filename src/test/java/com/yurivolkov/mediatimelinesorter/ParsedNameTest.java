@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 
 public class ParsedNameTest {
     @Test
-    public void parse() throws Exception {
+    public void parse() {
         assertOneName("00010-yp0038.jpg", 10, "yp0038.jpg",
                 true, "yp", 38, "jpg");
         assertOneName("-yp0038.jpg", 0, "yp0038.jpg",
@@ -48,20 +48,25 @@ public class ParsedNameTest {
     }
 
     @Test
-    public void parseTime() throws Exception {
+    public void parseTime() {
+        // Time with milliseconds is in UTC
+        // Ignore time in seconds
+
         long parsedTime = 1595095645000L;
-        assertOneTime("yv015-VID_20200718_210725.mp4", parsedTime);
-        assertOneTime("yv015-20200718_210725.mp4", parsedTime);
-        assertOneTime("yv015-20200718_210725-super.mp4", parsedTime);
-        assertOneTime("125-yv015-VID_20200718_210725.mp4", parsedTime);
-        assertOneTime("003-yv015-VID_20200718_210725-best-clip.mp4", parsedTime);
-        assertOneTime("zagv036-вода-бурлит.mov", 0);
-
-        assertOneTime("yp003-20200718_210725-10.jpg", parsedTime);
-
-        // Time with milliseconds is in UTC ?!
         long expectedTime = parsedTime + TimeZone.getDefault().getRawOffset();
 
+        assertOneTime("yv015-VID_20200718_210725000.mp4", expectedTime);
+        assertOneTime("yv015-VID_20200718_210725.mp4", 0);
+        assertOneTime("yv015-VID_20200718_210725000_Organic_Maps.mp4", 0);
+        assertOneTime("yv015-20200718_210725000.mp4", expectedTime);
+        assertOneTime("yv015-20200718_210725000-super.mp4", expectedTime);
+        assertOneTime("125-yv015-VID_20200718_210725000.mp4", expectedTime);
+        assertOneTime("003-yv015-VID_20200718_210725000-best-clip.mp4", expectedTime);
+        assertOneTime("zagv036-вода-бурлит.mov", 0);
+
+        assertOneTime("yp003-20200718_210725000-10.jpg", expectedTime);
+
+        // With milliseconds
         assertOneTime("yp003-20200718_210725910.jpg", expectedTime + 910);
         assertOneTime("yp003-20200718_210725910.MP.jpg", expectedTime + 910);
     }

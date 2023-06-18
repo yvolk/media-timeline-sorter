@@ -165,6 +165,8 @@ public class ParsedName {
             pattern = "yyyyMMdd_HHmmssSSSX";
         } else {
             pattern = "yyyyMMdd_HHmmss";
+            // local time in unknown time zone. We better not parse it at all
+            return 0;
         }
         SimpleDateFormat format = new SimpleDateFormat(pattern);
         try {
